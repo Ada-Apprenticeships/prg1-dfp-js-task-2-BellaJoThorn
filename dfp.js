@@ -14,10 +14,11 @@ function parseFile (indata, outdata, delimiter = ";") {
    let review 
    let sentiment
    let numRecords = 0
+   delimiter = lines[0].at(6)
 
    for (let line of lines) {
      const elements = line.split(delimiter);
-     const review = elements[0].slice(0, 20).trim()
+     const review = elements[0].trim().slice(0, 20)
      const sentiment = elements[1].trim()
      if (review != "review"){
      fs.appendFileSync(outdata, `${sentiment}${delimiter}${review}\n`, "utf-8");
