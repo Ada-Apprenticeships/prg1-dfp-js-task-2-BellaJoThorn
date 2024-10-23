@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { escape } = require('querystring');
 
 function parseFile (indata, outdata, delimiter = ";") {
 
@@ -14,17 +13,22 @@ function parseFile (indata, outdata, delimiter = ";") {
 
    let review 
    let sentiment
+   let numRecords = 0
 
    for (let line of lines) {
      const elements = line.split(delimiter);
-     const review = elements[0].slice(0, 20)
-     const sentiment = elements[1]
+     const review = elements[0].slice(0, 20).trim()
+     const sentiment = elements[1].trim()
      if (review != "review"){
-     fs.appendFileSync(outdata, `${sentiment};${review}\n`, "utf-8");
+     fs.appendFileSync(outdata, `${sentiment}${delimiter}${review}\n`, "utf-8");
+     numRecords++
      }
-   }
 
- } else return "-1"
+    }
+
+    return numRecords
+    
+ } else return -1
 
 }
 
