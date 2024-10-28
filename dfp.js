@@ -1,47 +1,40 @@
 const fs = require('fs');
 
-function parseFile (indata, outdata, delimiter = ";") {
-
-//Returns -1 if the input file does not exits 
+function parseFile (indata, outdata) {
+  
+  //Returns -1 if the input file does not exits 
   if (!fs.existsSync(indata)) {
-   return -1; 
+    return -1; 
   }
-
-//Deletes the current output file 
+  
+  //Deletes the current output file 
   fs.existsSync(outdata) ? fs.unlinkSync(outdata) : false
-
-//Splits the input file in ot an array by line
-  const data = fs.readFileSync(indata, "utf-8");
+  
+  //Reads the input file in read only mode and splits it into lines 
+  const data = fs.readFileSync(indata, {encoding: "utf-8", flag: 'r'});
   const lines = data.split(/\n/);
-
-  let review 
-  let sentiment
+  
+  // Initialize a counter for the number of records processed
   let numRecords = 0
-//Re assisgns the delimiter to the specific in the given input file
-  delimiter = lines[0].at(6)
-
-//Iterates through the lines array to find the reviews and sentiments
+  
+  //Extracts the delimiter from the first line of the file
+  const delimiter = lines[0].at(6)
+  
+  //Processes each line to extract and format review data
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i];
     const elements = line.split(delimiter);
     const review = elements[0].trim().slice(0, 20)
     const sentiment = elements[1].trim()
 
-    //Appends the reviews and sentiments to the output file
+    //Appends the formatted reviews and sentiments to the output file
     fs.appendFileSync(outdata, `${sentiment}${delimiter}${review}\n`, "utf-8");
     numRecords++
   }
+
   return numRecords
-}
-
-
-
-
-parseFile("datafile.csv", "outputfile.csv")
-
   
-
-
+}
 
 // Leave this code here for the automated tests
 module.exports = {
